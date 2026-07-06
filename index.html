@@ -30,9 +30,22 @@
             /* 가독성 최적화를 위한 자간 및 단어 끝 줄바꿈 기본 지정 */
             letter-spacing: 0.01em;
             word-break: keep-all;
+            overflow-wrap: break-word; /* 지나치게 긴 단어는 화면 폭에 맞춰 예외적으로 줄바꿈 허용 */
             break-inside: avoid;
         }
         /* 시니어 가독성 전용 줄간격 표준 지정 */
+        /* 모바일 줄바꿈 품질 개선 */
+        p, li, span {
+            text-wrap: pretty; /* 어색한 줄넘김·외톨이 단어 최소화 (지원 브라우저) */
+        }
+        h1, h2, h3 {
+            text-wrap: balance; /* 제목은 줄 길이를 고르게 배분 */
+        }
+        /* 좁은 화면에서는 자간을 기본으로 되돌려 한 줄에 더 많은 글자 확보 */
+        @media (max-width: 400px) {
+            body { letter-spacing: 0; }
+        }
+
         .readable-leading {
             line-height: 1.85 !important;
         }
