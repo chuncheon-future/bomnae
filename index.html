@@ -1597,7 +1597,7 @@
             }
         }
         function toggleSpeak(btn, article) {
-            if (!('speechSynthesis' in window)) { showToast('이 기기는 음성 읽기를 지원하지 않습니다.'); return; }
+            if (!('speechSynthesis' in window)) { showToast('이 브라우저는 음성 읽기를 지원하지 않아요. 오른쪽 위 메뉴에서 \'다른 브라우저로 열기\'를 눌러주세요.'); return; }
             if (speakingBtn === btn) { stopSpeaking(); return; }
             stopSpeaking();
             const parts = [];
@@ -1730,8 +1730,8 @@
                 homeCards.appendChild(card);
             });
 
-            // 각 기사에 '읽어주기' 버튼 자동 부착
-            if ('speechSynthesis' in window) {
+            // 각 기사에 '읽어주기' 버튼 자동 부착 (항상 표시)
+            {
                 document.querySelectorAll('article').forEach(article => {
                     const inner = article.querySelector('.p-5');
                     if (!inner) return;
