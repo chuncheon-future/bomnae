@@ -82,6 +82,13 @@
             .reveal { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
             .reveal.shown { opacity: 1; transform: none; }
         }
+    
+        /* 스크롤 시 상·하단 바 자동 숨김 */
+        #siteHeader { transition: transform .25s ease; }
+        #tabNav { transition: top .25s ease; }
+        #bottomBar { transition: transform .25s ease; }
+        .bar-hidden-top { transform: translateY(-105%); }
+        .bar-hidden-bottom { transform: translateY(110%); }
     </style>
 </head>
 <body class="bg-cream text-slate-800 antialiased font-normal pb-24" id="appBody">
@@ -1591,7 +1598,7 @@
     </div>
 
     <!-- 최하단 공공기관형 고정 제어바 (문자보내기 및 링크복사 추가) -->
-    <footer class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-creamLine shadow-[0_-4px_10px_rgba(0,0,0,0.06)]">
+    <footer id="bottomBar" class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-creamLine shadow-[0_-4px_10px_rgba(0,0,0,0.06)]">
         <div class="max-w-md mx-auto px-4 py-3 grid grid-cols-3 gap-2">
             <!-- 1. 문자 보내기 -->
             <button onclick="sendSMS()" class="flex flex-col items-center justify-center text-slate-700 hover:text-brandBlue font-bold py-1.5 rounded-xl hover:bg-slate-50 transition-all active:scale-95">
@@ -1761,6 +1768,25 @@
                     io.observe(el);
                 });
             }
+
+            // ── 읽는 동안 상·하단 바 자동 숨김 (위로 올리면 복귀) ──
+            const bottomBar = document.getElementById('bottomBar');
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const y = window.scrollY;
+                const goingDown = y > lastScrollY + 6;
+                const goingUp = y < lastScrollY - 6;
+                if (goingDown && y > 140) {
+                    if (siteHeader) siteHeader.classList.add('bar-hidden-top');
+                    if (tabNav) tabNav.style.top = '0px';
+                    if (bottomBar) bottomBar.classList.add('bar-hidden-bottom');
+                } else if (goingUp || y <= 140) {
+                    if (siteHeader) siteHeader.classList.remove('bar-hidden-top');
+                    syncNavTop();
+                    if (bottomBar) bottomBar.classList.remove('bar-hidden-bottom');
+                }
+                if (goingDown || goingUp) lastScrollY = y;
+            }, { passive: true });
 
             // ── 홈 화면 목차 자동 생성 ──
             const tabMeta = [
